@@ -6,6 +6,7 @@ function PromptSection() {
   const [disabled, setDisabled] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const userMsgStyle = "mx-6 flex justify-end";
   const modelMsgStyle = "mx-6 flex justify-start";
 
@@ -16,14 +17,19 @@ function PromptSection() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessages([...messages, inputValue]);
+    const newMessages = [...messages, inputValue];
+    setMessages(newMessages);
+    setLoading(true);
     axios
       .post("http://localhost:5001/api/prompt", { message: inputValue })
       .then((response) => {
-        setMessages([...messages, response.data.message]);
+        setMessages((prevMessages) => [...prevMessages, response.data.message]);
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
     setInputValue("");
     setDisabled(true);
@@ -31,8 +37,15 @@ function PromptSection() {
 
   return (
     <div className="flex items-center justify-center w-screen h-screen overflow-hidden">
-      <div className="overflow-hidden absolute w-[90%] h-[90%] bg-[#151515] rounded-[5px] border-solid border-[1px] border-[#006ff7] z-0 flex flex-col">
-        <div className="overflow-y-auto my-2 pt-4 flex-grow">
+      <div className="absolute w-[90%] h-[90%] bg-[#151515] rounded-[5px] border-solid border-[1px] border-[#006ff7] z-0 flex flex-col">
+        <div
+          className="overflow-y-auto mt-2 mb-14 pt-4 flex-grow"
+          ref={(el) => {
+            if (el) {
+              el.scrollTop = el.scrollHeight;
+            }
+          }}
+        >
           {messages.map((message, index) => (
             <div
               key={index}
@@ -44,19 +57,13 @@ function PromptSection() {
               />
             </div>
           ))}
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={index % 2 === 0 ? userMsgStyle : modelMsgStyle}
-            >
-              <Message
-                text={message}
-                bgColor={index % 2 === 0 ? "bg-black" : "bg-[#00368c]"}
-              />
+          {loading && (
+            <div className={modelMsgStyle}>
+              <Message text="..." bgColor="bg-[#00368c]" />
             </div>
-          ))}
+          )}
         </div>
-        <div className="absolute bottom-0 pb-4 w-full bg-[#151515]">
+        <div className="absolute bottom-0 pb-4 pt-2 w-full bg-[#151515]">
           <form
             method="POST"
             className="flex items-center"
