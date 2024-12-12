@@ -16,16 +16,14 @@ function PromptSection() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessages((prevMessages) => [...prevMessages, inputValue]);
-    console.log("Global Variable Updated:", inputValue);
+    setMessages([...messages, inputValue]);
     axios
-      .post("/api/prompt", { message: inputValue })
+      .post("http://localhost:5001/api/prompt", { message: inputValue })
       .then((response) => {
-        setMessages((prevMessages) => [...prevMessages, response.data.message]);
-        console.log("Response from server:", response.data.message);
+        setMessages([...messages, response.data.message]);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.log(error);
       });
     setInputValue("");
     setDisabled(true);
@@ -36,7 +34,10 @@ function PromptSection() {
       <div className="overflow-hidden absolute w-[90%] h-[90%] bg-[#151515] rounded-[5px] border-solid border-[1px] border-[#006ff7] z-0 flex flex-col">
         <div className="overflow-y-auto my-2 pt-4 flex-grow">
           {messages.map((message, index) => (
-            <div key={index} className={userMsgStyle}>
+            <div
+              key={index}
+              className={index % 2 === 0 ? userMsgStyle : modelMsgStyle}
+            >
               <Message text={message} bgColor="bg-black" />
             </div>
           ))}

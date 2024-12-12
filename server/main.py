@@ -1,37 +1,23 @@
 from flask import Flask, request, jsonify
-import os
 from flask_cors import CORS
-import google.generativeai as gemini
+import google.generativeai as genai
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
-# Initialize Google Gemini API
-gemini_api_key = os.getenv('GEMINI_API_KEY')
-if not gemini_api_key:
-    raise EnvironmentError("GEMINI_API_KEY environment variable not set")
-gemini.api_key = gemini_api_key
-model = gemini.GenerativeModel("gemini-1.5-flash")
+genai.configure(api_key="AIzaSyAfm_3uBqRdN86XLa7weHilCJNlMmj3NXs")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 @app.route('/api/prompt', methods=['POST'])
-def process_message():
-    data = request.get_json()
-    message = data.get('message')
-
-    if not message:
-        return jsonify({'error': 'No message provided'}), 400
-
+def handle_prompt():
     try:
-        # Process the message using Google Gemini
+        data = request.get_json()
+        message = data.get('message', '')
         response = model.generate_content(message)
-        if 'choices' in response and len(response['choices']) > 0:
-            generated_message = response['choices'][0]['text']
-        else:
-            return jsonify({'error': 'No text generated'}), 500
-
-        return jsonify({'message': generated_message}), 200
+        return jsonify({'message': response.text})
     except Exception as e:
+        app.logger.error(f"Error processing message: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(port=5001)
