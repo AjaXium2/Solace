@@ -6,7 +6,7 @@ function PromptSection() {
   const [disabled, setDisabled] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
-  const userMsgStyle = "mx-6 lg:ml-[auto] flex justify-end";
+  const userMsgStyle = "mx-6 flex justify-end";
   const modelMsgStyle = "mx-6 flex justify-start";
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +38,21 @@ function PromptSection() {
               key={index}
               className={index % 2 === 0 ? userMsgStyle : modelMsgStyle}
             >
-              <Message text={message} bgColor="bg-black" />
+              <Message
+                text={message}
+                bgColor={index % 2 === 0 ? "bg-black" : "bg-[#00368c]"}
+              />
+            </div>
+          ))}
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={index % 2 === 0 ? userMsgStyle : modelMsgStyle}
+            >
+              <Message
+                text={message}
+                bgColor={index % 2 === 0 ? "bg-black" : "bg-[#00368c]"}
+              />
             </div>
           ))}
         </div>
