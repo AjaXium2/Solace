@@ -21,7 +21,7 @@ function PromptSection() {
     setMessages(newMessages);
     setLoading(true);
     axios
-      .post("http://172.31.196.44:8080/api/prompt", { message: inputValue })
+      .post("http://localhost:5001/api/prompt", { message: inputValue })
       .then((response) => {
         setMessages((prevMessages) => [...prevMessages, response.data.message]);
       })
