@@ -15,6 +15,25 @@ function PromptSection() {
     setDisabled(event.target.value === "");
   };
 
+  const playAudio = (message: string) => {
+    axios
+      .post(
+        "http://localhost:5001/api/generate_audio",
+        {
+          text: message,
+        },
+        { responseType: "blob" }
+      )
+      .then((response) => {
+        const audioUrl = URL.createObjectURL(response.data);
+        const audio = new Audio(audioUrl);
+        audio.play();
+      })
+      .catch((error) => {
+        console.error("Error fetching audio:", error);
+      });
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const newMessages = [...messages, inputValue];
@@ -24,6 +43,7 @@ function PromptSection() {
       .post("http://localhost:5001/api/prompt", { message: inputValue })
       .then((response) => {
         setMessages((prevMessages) => [...prevMessages, response.data.message]);
+        playAudio(response.data.message);
       })
       .catch((error) => {
         console.log(error);
@@ -63,7 +83,7 @@ function PromptSection() {
             </div>
           )}
         </div>
-        <div className="absolute bottom-0 pb-4 pt-2 w-full bg-[#151515]">
+        <div className="absolute bottom-0 pb-4 pt-2 w-full rounded-[5px] bg-[#151515]">
           <form
             method="POST"
             className="flex items-center"
