@@ -2,7 +2,7 @@ from flask import jsonify
 import google.generativeai as genai
 import os
 
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY', 'AIzaSyDaUliNYw3pJMmw5ePWlrAOzt7tF_vfg58')
 
 class AnxietyService:
     def __init__(self):

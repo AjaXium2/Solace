@@ -3,12 +3,15 @@ from elevenlabs.client import ElevenLabs
 import soundfile as sf
 import os
 
-VOICE_API_KEY = os.getenv("VOICE_API_KEY")
+# Définir directement la clé API (pas besoin d'utiliser set ici)
+VOICE_API_KEY = "sk_e26404d74b6c4c02cbcb526ccac90a0323a58512152ff57e"
 
+# Initialiser le client Eleven Labs avec la clé API
 client = ElevenLabs(
   api_key=VOICE_API_KEY,
 )
 
+# Fonction pour jouer l'audio généré
 def playAudio(message):
     audio = client.generate(
         text=message,
@@ -17,6 +20,7 @@ def playAudio(message):
     )
     play(audio)
 
+# Fonction pour générer l'audio et le retourner sous forme de bytes
 def generateAudio(message):
     audio = client.generate(
         text=message,
