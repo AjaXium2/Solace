@@ -4,7 +4,7 @@ import soundfile as sf
 import os
 
 # la clé API
-VOICE_API_KEY = "sk_f65e4c6c051524204a876096c9aa676e64388b98e2393e6a"
+VOICE_API_KEY = "sk_3c3800006263a32ef684f63f6a10a2bdb54144ce91619d73"
 
 # Initialiser le client Eleven Labs avec la clé API
 client = ElevenLabs(
