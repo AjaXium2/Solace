@@ -2,8 +2,10 @@ from flask import jsonify
 import os
 import google.generativeai as genai
 
-GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY', 'AIzaSyDaUliNYw3pJMmw5ePWlrAOzt7tF_vfg58')
+from decouple import config
 
+# Lire les clés API depuis .env
+GEMINI_API_KEY = config('GEMINI_API_KEY')
 class EmotionalSupportService:
     def __init__(self):
 

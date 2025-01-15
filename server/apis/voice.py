@@ -3,13 +3,14 @@ from elevenlabs.client import ElevenLabs
 import soundfile as sf
 import os
 
-# la clé API
-VOICE_API_KEY = "sk_3c3800006263a32ef684f63f6a10a2bdb54144ce91619d73"
+from decouple import config
+
+# Lire les clés API depuis .env
+VOICE_API_KEY = config('VOICE_API_KEY')
 
 # Initialiser le client Eleven Labs avec la clé API
-client = ElevenLabs(
-  api_key=VOICE_API_KEY,
-)
+client = ElevenLabs(api_key=VOICE_API_KEY)
+
 
 # Fonction pour jouer l'audio généré
 def playAudio(message):

@@ -2,8 +2,10 @@ from flask import jsonify
 import google.generativeai as genai
 import os
 
-# Ensure the API key is set correctly in your environment variables
-GEMINI_API_KEY = os.getenv('GOOGLE_API_KEY', 'AIzaSyDaUliNYw3pJMmw5ePWlrAOzt7tF_vfg58')  # Fallback to a default key if not set
+from decouple import config
+
+# Lire les clés API depuis .env
+GEMINI_API_KEY = config('GEMINI_API_KEY')
 
 class MainService:
     def __init__(self):
